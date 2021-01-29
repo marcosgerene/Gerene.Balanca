@@ -1,4 +1,6 @@
 # Gerene.Balanca
+[![Nuget count](http://img.shields.io/nuget/v/Gerene.Balanca.svg)](https://www.nuget.org/packages/Gerene.Balanca)
+
 Leitura de balança de checkout nativo em .Net Standard 2.0.
 
 O que o projeto faz
