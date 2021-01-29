@@ -59,4 +59,6 @@ A biblioteca conta também com dois atributos auxiliares "UltimoPeso" e "UltimaL
 Agradecimentos
 -------
 
-Agradecimento especial ao projeto https://github.com/thiago132000/brainiac o qual usei como referência para estudo.
+Agradecimento especial aos projetos:
+ - https://github.com/thiago132000/brainiac (base de estudos para comunicação serial em C#);
+ - ACBrBal - Base de estudos para funcionamento de balanças de checkout;
