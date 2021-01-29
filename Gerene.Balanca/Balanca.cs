@@ -120,6 +120,14 @@ namespace Gerene.Balanca
 
                 string dados = _Serial.ReadExisting();
 
+                //Para configurações sem envio automático pela balança, a aplicação deve solicitar o peso
+                if (string.IsNullOrEmpty(dados))
+                {
+                    _Serial.Write(new byte[] { 0x05 }, 0, 1);
+
+                    dados = _Serial.ReadExisting();
+                }
+
                 if (string.IsNullOrEmpty(dados))
                     return 0;
 
