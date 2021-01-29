@@ -5,14 +5,10 @@ using System.Threading.Tasks;
 
 namespace Gerene.Balanca
 {
-    /// <summary>
-    /// Modelo 1 - Protocolo Toledo e similares
-    /// Modelo 2 - Protocolo Filizola e similares
-    /// </summary>
     public enum ModeloBalanca
     {
-        Modelo1,
-        Modelo2
+        Toledo,
+        Filizola
     }
 
     public class Balanca : IDisposable
@@ -33,16 +29,13 @@ namespace Gerene.Balanca
             }
         }
         public int DelayMonitoramento { get; set; }
-
-        public DateTime UltimaLeitura { get; private set; }
-        public decimal UltimoPeso { get; private set; }
         #endregion
 
         #region Construtor
         public Balanca()
         {
             _Serial = new SerialPort();
-            Modelo = ModeloBalanca.Modelo1;
+            Modelo = ModeloBalanca.Toledo;
             NomePorta = "COM1";
             BaudRate = 9600;
             Timeout = 300;
@@ -71,22 +64,24 @@ namespace Gerene.Balanca
         #region Eventos
         public class BalancaEventArgs : EventArgs
         {
-            public decimal Peso { get; private set; }
+            public string Leitura { get; set; }
+            public decimal? Peso { get; private set; }
             public Exception Excessao { get; set; }
 
-            public BalancaEventArgs(decimal peso)
+            public BalancaEventArgs(string leitura, decimal peso)
             {
+                Leitura = leitura;
                 Peso = peso;
             }
 
-            public BalancaEventArgs(Exception exception)
+            public BalancaEventArgs(string leitura, Exception exception)
             {
+                Leitura = leitura;
                 Excessao = exception;
             }
         }
 
         public event EventHandler<BalancaEventArgs> AoLerPeso;
-        public event EventHandler<BalancaEventArgs> AoLancarExcessao;
         #endregion
 
         #region Métodos
@@ -113,50 +108,87 @@ namespace Gerene.Balanca
         {
             decimal pesolido = 0;
 
+            string leitura = null;
+
             try
             {
                 if (_Serial == null || !_Serial.IsOpen)
                     throw new ArgumentException("A porta serial não está aberta");
 
-                string dados = _Serial.ReadExisting();
+                leitura = LerPortaSerial();
 
-                //Para configurações sem envio automático pela balança, a aplicação deve solicitar o peso
-                if (string.IsNullOrEmpty(dados))
-                {
-                    _Serial.Write(new byte[] { 0x05 }, 0, 1);
-
-                    dados = _Serial.ReadExisting();
-                }
-
-                if (string.IsNullOrEmpty(dados))
+                if (string.IsNullOrEmpty(leitura))
                     return 0;
 
-                switch (Modelo)
-                {
-                    case ModeloBalanca.Modelo1:
-                        dados = dados.Substring(dados.Length - 6, 5);
-                        break;
-                    case ModeloBalanca.Modelo2:
-                        dados = dados.Substring(dados.Length - 5);                        
-                        break;
-                }
-
-                pesolido = decimal.Parse(dados) / 1000M;
-
-                UltimoPeso = pesolido;
-                UltimaLeitura = DateTime.Now;
+                pesolido = TratarLeitura(leitura);
 
                 if (AoLerPeso != null)
-                    AoLerPeso.Invoke(this, new BalancaEventArgs(pesolido));
+                    AoLerPeso.Invoke(this, new BalancaEventArgs(leitura, pesolido));
 
                 return pesolido;
             }
             catch (Exception ex)
             {
-                if (AoLancarExcessao != null)
-                    AoLancarExcessao.Invoke(this, new BalancaEventArgs(ex));
+                if (AoLerPeso != null)
+                    AoLerPeso.Invoke(this, new BalancaEventArgs(leitura, ex));
 
                 throw;
+            }
+        }
+
+        private string LerPortaSerial()
+        {
+            //faz a leitura da porta serial
+            string leitura = _Serial.ReadExisting();
+
+            //A balança pode trabalhar de forma ativa e passiva, em caso de forma passiva a aplicação deve solicitar o peso
+            if (string.IsNullOrEmpty(leitura))
+            {
+                switch (Modelo)
+                {
+                    case ModeloBalanca.Toledo:
+                    case ModeloBalanca.Filizola:
+                        _Serial.Write(new byte[] { 0x05 }, 0, 1);
+                        return _Serial.ReadExisting();
+
+                    default:
+                        return leitura;
+                }
+            }
+
+            return leitura;
+        }
+
+        private decimal TratarLeitura(string leitura)
+        {
+            switch (Modelo)
+            {
+                case ModeloBalanca.Toledo:
+                    leitura = leitura.Substring(leitura.Length - 6, 5);
+
+                    switch (leitura)
+                    {
+                        case "IIIII": throw new ArgumentException("Peso instável");
+                        case "NNNNN": throw new ArgumentException("Peso negativo");
+                        case "SSSSS": throw new ArgumentException("Sobrecarga");
+                    }
+
+                    return decimal.Parse(leitura) / 1000M;
+
+                case ModeloBalanca.Filizola:
+                    leitura = leitura.Substring(leitura.Length - 5);
+
+                    switch (leitura[0])
+                    {
+                        case 'I': throw new ArgumentException("Peso instável");
+                        case 'N': throw new ArgumentException("Peso negativo");
+                        case 'S': throw new ArgumentException("Sobrecarga");
+                    }
+
+                    return decimal.Parse(leitura) / 1000M;
+
+                default:
+                    throw new ArgumentException($"Modelo \"{Modelo}\" não implementado");
             }
         }
 
@@ -174,7 +206,7 @@ namespace Gerene.Balanca
                     }
                     catch
                     {
-                        //Não preciso fazer tratamentos aqui, o próprio ler peso chama o evento "AoLancarExcessao" para o usuário tratar
+                        //Não é necessário o tratamento no monitoramento, o LerPeso() faz o tratamento e lança a excessão tratada ao usuário
                     }
                     finally
                     {

@@ -47,10 +47,9 @@ namespace Gerene.Balanca.Demo
             };
 
             _Balanca.AoLerPeso += _Balanca_AoLerPeso;
-            _Balanca.AoLancarExcessao += _Balanca_AoLancarExcessao;
 
             _Balanca.Conectar();
-        }        
+        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -79,24 +78,25 @@ namespace Gerene.Balanca.Demo
         {
             this.Invoke((MethodInvoker)delegate
             {
-                label7.Text = $"Ultimo peso {e.Peso:N3} Kg";
+                if (e.Peso.HasValue)
+                {
 
-                textBox1.Text += $"{DateTime.Now:dd/MM/yyyy HH:mm:ss} - {e.Peso:N3} Kg" + Environment.NewLine;
+                    label7.Text = $"Ultimo peso {e.Peso:N3} Kg";
+
+                    textBox1.Text += $"{DateTime.Now:dd/MM/yyyy HH:mm:ss} - {e.Peso:N3} Kg" + Environment.NewLine;
+                }
+
+                if (e.Excessao != null)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        textBox2.Text += $"{DateTime.Now:dd/MM/yyyy HH:mm:ss} - {e.Excessao.Message}" + Environment.NewLine;
+                    });
+                }
             });
 
             Application.DoEvents();
         }
-
-        private void _Balanca_AoLancarExcessao(object sender, Balanca.BalancaEventArgs e)
-        {
-            this.Invoke((MethodInvoker)delegate
-            {
-                textBox2.Text += $"{DateTime.Now:dd/MM/yyyy HH:mm:ss} - {e.Excessao.Message}" + Environment.NewLine;
-            });
-
-            Application.DoEvents();
-        }
-        
 
     }
 }
