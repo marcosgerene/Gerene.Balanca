@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gerene.Balanca", "Gerene.Balanca\Gerene.Balanca.csproj", "{58EAA485-52F8-4469-B785-C608C973648B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gerene.Balanca.Demo", "Gerene.Balanca.Demo\Gerene.Balanca.Demo.csproj", "{B46365D5-B7F3-4011-AC90-97FE4F0D494C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58EAA485-52F8-4469-B785-C608C973648B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58EAA485-52F8-4469-B785-C608C973648B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58EAA485-52F8-4469-B785-C608C973648B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58EAA485-52F8-4469-B785-C608C973648B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B46365D5-B7F3-4011-AC90-97FE4F0D494C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B46365D5-B7F3-4011-AC90-97FE4F0D494C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B46365D5-B7F3-4011-AC90-97FE4F0D494C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B46365D5-B7F3-4011-AC90-97FE4F0D494C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {825AF315-7D13-42FE-9F78-BDE0DCEE371D}
+	EndGlobalSection
+EndGlobal
