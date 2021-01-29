@@ -86,11 +86,11 @@ namespace Gerene.Balanca.Demo
                     textBox1.Text += $"{DateTime.Now:dd/MM/yyyy HH:mm:ss} - {e.Peso:N3} Kg" + Environment.NewLine;
                 }
 
-                if (e.Excessao != null)
+                if (e.Excecao != null)
                 {
                     this.Invoke((MethodInvoker)delegate
                     {
-                        textBox2.Text += $"{DateTime.Now:dd/MM/yyyy HH:mm:ss} - {e.Excessao.Message}" + Environment.NewLine;
+                        textBox2.Text += $"{DateTime.Now:dd/MM/yyyy HH:mm:ss} - {e.Excecao.Message}" + Environment.NewLine;
                     });
                 }
             });

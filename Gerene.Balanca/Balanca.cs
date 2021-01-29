@@ -66,7 +66,7 @@ namespace Gerene.Balanca
         {
             public string Leitura { get; set; }
             public decimal? Peso { get; private set; }
-            public Exception Excessao { get; set; }
+            public Exception Excecao { get; set; }
 
             public BalancaEventArgs(string leitura, decimal peso)
             {
@@ -77,7 +77,7 @@ namespace Gerene.Balanca
             public BalancaEventArgs(string leitura, Exception exception)
             {
                 Leitura = leitura;
-                Excessao = exception;
+                Excecao = exception;
             }
         }
 
