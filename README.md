@@ -47,14 +47,11 @@ balanca.AoLerPeso += Balanca_AoLerPeso;
 
 private void Balanca_AoLerPeso(object sender, Balanca.BalancaEventArgs e)
 {
-   //e.Peso contém o peso lido
+   //e.Peso contem o peso lido (em caso de leitura com sucesso)
+   //e.Leitura contem a string lida (já tratada)
+   //e.Excecao contem a exception disparada em caso de erro
 }
 ```
-
-A biblioteca conta também com dois atributos auxiliares "UltimoPeso" e "UltimaLeitura" (data e hora).
-
-
-
 
 Agradecimentos
 -------
