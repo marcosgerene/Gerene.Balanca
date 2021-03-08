@@ -198,19 +198,23 @@ namespace Gerene.Balanca
         {
             await Task.Run(async () =>
             {
-                while (_IsMonitorar && !_Cancelamento.Token.IsCancellationRequested)
+                while (!_Cancelamento.Token.IsCancellationRequested)
                 {
-                    try
+                    //Não o while mesmo com o IsMonitorar false, porque pode ser uma para momentânea para uma requisição manual
+                    if (_IsMonitorar)
                     {
-                        LerPeso();
-                    }
-                    catch
-                    {
-                        //Não é necessário o tratamento no monitoramento, o LerPeso() faz o tratamento e lança a excessão tratada ao usuário
-                    }
-                    finally
-                    {
-                        await Task.Delay(DelayMonitoramento);
+                        try
+                        {
+                            LerPeso();
+                        }
+                        catch
+                        {
+                            //Não é necessário o tratamento no monitoramento, o LerPeso() faz o tratamento e lança a excessão tratada ao usuário
+                        }
+                        finally
+                        {
+                            await Task.Delay(DelayMonitoramento);
+                        }
                     }
                 }
             }, _Cancelamento.Token);
