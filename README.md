@@ -18,7 +18,7 @@ Exemplo de leitura única:
 var balanca = new Balanca()
 {
 	NomePorta = "COM1",
-	Modelo = ModeloBalanca.Modelo1,  //Modelo 1 para Toledo, 2 para Filizola
+	Modelo = ModeloBalanca.Toledo,  //Atualmente implementa os protocolos para Toledo e Filizola
 	BaudRate = 9600,
 	Timeout = 500
 };
@@ -34,7 +34,7 @@ Exemplo para monitoramento de balança:
 var balanca = new Balanca()
 {
 	NomePorta = "COM1",
-	Modelo = ModeloBalanca.Modelo1,
+	Modelo = ModeloBalanca.Toledo,
 	BaudRate = 9600,
 	Timeout = 500,
 
